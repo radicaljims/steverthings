@@ -16,36 +16,38 @@ module.exports = function(ctx, cb) {
 
     let show_me_steve = permalink =>
         {
-
             let result = { success: true, status: "Successfully posted" + permalink };
             let post_text = "https://www.reddit.com/" + permalink;
-            T.post('statuses/update', { status: post_text }, function(err, data, response) {
 
+            return T.post('statuses/update', { status: post_text }, function(err, data, response) {
+
+                let result = { success: true, status: "Successfully posted" + permalink };
                 if (err) {
                     result = { success: false, status: "Failed to post" + permalink };
                 }
-            });
 
-            return result;
+                return result;
+
+            });
         };
 
     let succ = resp =>
         {
-            let posts_status = resp.data.data.children.map((child) => show_me_steve(child.data.permalink));
+            Promise.all(resp.data.data.children.map((child) => show_me_steve(child.data.permalink))).then(posts_status => {
 
-            let failed_posts = posts_status.filter((post) => post.success == false);
-            let fail_message = failed_posts.reduce((m, f) => m + "\n" + f.status, "");
+                let failed_posts = posts_status.filter((post) => post.success == false);
+                let fail_message = failed_posts.reduce((m, f) => m + "\n" + f.status, "");
 
-            let message = fail_message || "Successfully posted all Steves!";
+                let message = fail_message || "Successfully posted all Steves!";
 
-            cb(null, { status: message });
+                cb(null, { status: message });
+
+            });
         };
 
     let err = resp =>
         {
-            console.log("Error fetching reddit data");
             console.log(resp);
-
             cb(null, { status: "Reddit Failure"});
         };
 
