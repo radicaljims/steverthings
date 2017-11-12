@@ -1,5 +1,7 @@
 ## SteverThings
 
+https://twitter.com/SteverThings
+
 A webtask that updates a Twitter account with links to the day's latest Steve posts on /r/StrangerThings.
 
 ### Creating task
@@ -10,7 +12,7 @@ A webtask that updates a Twitter account with links to the day's latest Steve po
 
 `wt cron create --schedule "0 17 * * *" steve.js --name steverthings --secret consumer_key=... --secret consumer_secret=... --secret access_token=... --secret access_token_secret...`
 
-### Dependnecies
+### Dependencies
 
  * Auth0 Webtask platform - https://webtask.io/
  * Node - https://nodejs.org/en/
